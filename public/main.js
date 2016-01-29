@@ -12,7 +12,7 @@ var bgImage = new Image();
 bgImage.onload = function () {
 	bgReady = true;
 };
-bgImage.src = "images/background.png";
+bgImage.src = "assets/sand.jpg";
 // Hero image
 var heroReady = false;
 var heroImage = new Image();
