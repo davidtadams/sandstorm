@@ -76,6 +76,9 @@ io.on('connection', function(socket){
     //send back all player positions
     io.emit('all players', players);
   })
+  socket.on('game won', function(){
+    io.emit('game over', [socket.id])
+  })
 
   socket.on('disconnect', function() {
     delete players[socket.id]

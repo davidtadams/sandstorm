@@ -68,28 +68,38 @@ var reset = function () {
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
 
 };
+var hardreset = function(){
+	monsterAlive = true;
+	hero.x = canvas.width / 2;
+	hero.y = canvas.height / 2;
+
+	// Throw the monster somewhere on the screen randomly
+	monster.x = 32 + (Math.random() * (canvas.width - 64));
+	monster.y = 32 + (Math.random() * (canvas.height - 64));
+	monstersCaught=0;
+}
 // Update game objects
 var update = function (modifier) {
   if (38 in keysDown) { // Player holding up
 		if(hero.y > 0){
       hero.y -= hero.speed * modifier;}
-    monster.x -= monster.speed * modifier;
+    // monster.x -= monster.speed * modifier;
 	}
 	if (40 in keysDown) { // Player holding down
     if(hero.y < 450){
     hero.y += hero.speed * modifier;}
-    monster.x += monster.speed * modifier;
+    // monster.x += monster.speed * modifier;
 	}
 	if (37 in keysDown) { // Player holding left
     if(hero.x > 0){
   	hero.x -= hero.speed * modifier;}
-    monster.y -= monster.speed * modifier;
+    // monster.y -= monster.speed * modifier;
 
 	}
 	if (39 in keysDown) { // Player holding right
     if(hero.x < canvas.height){
     hero.x += hero.speed * modifier;}
-    monster.y += monster.speed * modifier;
+    // monster.y += monster.speed * modifier;
 	}
 
 	socket.emit('player location', {
@@ -107,14 +117,11 @@ var update = function (modifier) {
 		&& monster.y <= (hero.y + 32)
 	) {
 		++monstersCaught;
-    ++both;
-    monsterAlive = false;
-    monster.x = -500;
+		reset();
   }
 
-if(both >= 2){
-    both = 0
-    reset();
+if(monstersCaught >= 10){
+    socket.emit('game won')
 	}
 };
 
@@ -171,4 +178,8 @@ main();
 
 socket.on('all players', function(players) {
 	render(players);
+})
+socket.on('game over', function(player){
+	alert(player + ' won the game')
+	hardreset();
 })
