@@ -67,18 +67,18 @@ server.on('listening', onListening);
 var io = require('socket.io')(server);
 var players = {};
 io.on('connection', function(socket){
-  // console.log('------CONNECTION MADE: ', socket.id);
   players[socket.id] = {};
   socket.on('player location', function(location) {
-    // console.log('------RECEIVING CONNECTION: ', location);
     //store location
     players[socket.id].x = location.x;
     players[socket.id].y = location.y;
 
-    // console.log('------PLAYERS: ', players);
-
     //send back all player positions
     io.emit('all players', players);
+  })
+
+  socket.on('disconnect', function() {
+    delete players[socket.id]
   })
 });
 
