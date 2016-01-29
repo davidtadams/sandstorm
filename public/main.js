@@ -12,7 +12,7 @@ var bgImage = new Image();
 bgImage.onload = function () {
 	bgReady = true;
 };
-bgImage.src = "images/background.png";
+bgImage.src = "images/sand.jpg";
 // Hero image
 var heroReady = false;
 var heroImage = new Image();
@@ -26,14 +26,8 @@ var monsterImage = new Image();
 monsterImage.onload = function () {
 	monsterReady = true;
 };
-monsterImage.src = 'images/monster.png';
+monsterImage.src = 'images/oasis.png';
 // Monster image
-var monster2Ready = false;
-var monster2Image = new Image();
-monster2Image.onload = function () {
-	monster2Ready = true;
-};
-monster2Image.src = "https://github.com/lostdecade/simple_canvas_game/blob/master/images/monster.png?raw=true";
 
 // Game objects
 var hero = {
@@ -46,14 +40,10 @@ var monster = {
   x: 0,
 	y: 0
 };
-var monster2 = {
-	x: 0,
-	y: 0
-};
+
 var monstersCaught = 0;
 var both = 0;
 var monsterAlive = true;
-var monster2Alive = true;
 // Handle keyboard controls
 var keysDown = {};
 
@@ -68,15 +58,13 @@ addEventListener("keyup", function (e) {
 // Reset the game when the player catches a monster
 var reset = function () {
   monsterAlive = true;
-  monster2Alive = true;
 	hero.x = canvas.width / 2;
 	hero.y = canvas.height / 2;
 
 	// Throw the monster somewhere on the screen randomly
 	monster.x = 32 + (Math.random() * (canvas.width - 64));
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
-  monster2.x = 32 + (Math.random() * (canvas.width - 64));
-  monster2.y = 32 + (Math.random() * (canvas.height - 64));
+
 };
 // Update game objects
 var update = function (modifier) {
@@ -108,8 +96,6 @@ var update = function (modifier) {
 	});
 
 
-
-
 	// Are they touching?
 
 	if (
@@ -123,17 +109,7 @@ var update = function (modifier) {
     monsterAlive = false;
     monster.x = -500;
   }
-  if(
-    hero.x <= (monster2.x + 32)
-    && monster2.x <= (hero.x + 32)
-    && hero.y <= (monster2.y + 32)
-    && monster2.y <= (hero.y + 32)
-  ) {
-    ++monstersCaught;
-    ++both;
-    monster2Alive = false
-    monster2.x = -500
-  }
+
 if(both >= 2){
     both = 0
     reset();
@@ -159,9 +135,6 @@ var render = function (players) {
 		ctx.drawImage(monsterImage, monster.x, monster.y);
 	}
 
-  if (monster2Ready && monster2Alive) {
-    ctx.drawImage(monster2Image, monster2.x, monster2.y);
-  }
 
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
