@@ -26,10 +26,11 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
+    res.send('error: ' + err.message)
+    // res.render('error', {
+    //   message: err.message,
+    //   error: err
+    // });
   });
 }
 
@@ -37,10 +38,11 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  res.send('error: ' + err.message)
+  // res.render('error', {
+  //   message: err.message,
+  //   error: {}
+  // });
 });
 
 
@@ -63,14 +65,20 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 var io = require('socket.io')(server);
-
-
-/* Socket code */
+var players = {};
 io.on('connection', function(socket){
-  console.log('connection made');
-  console.log(socket);
+  // console.log('------CONNECTION MADE: ', socket.id);
+  players[socket.id] = {};
   socket.on('player location', function(location) {
-    // console.log(location);
+    // console.log('------RECEIVING CONNECTION: ', location);
+    //store location
+    players[socket.id].x = location.x;
+    players[socket.id].y = location.y;
+
+    // console.log('------PLAYERS: ', players);
+
+    //send back all player positions
+    io.emit('all players', players);
   })
 });
 

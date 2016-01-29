@@ -100,8 +100,15 @@ var update = function (modifier) {
     if(hero.x < canvas.height){
     hero.x += hero.speed * modifier;}
     monster.y += monster.speed * modifier;
-
 	}
+
+	socket.emit('player location', {
+		x: hero.x,
+		y: hero.y
+	});
+
+
+
 
 	// Are they touching?
 
@@ -134,20 +141,18 @@ if(both >= 2){
 };
 
 // Draw everything
-var render = function () {
-	socket.emit('player location', hero);
-
-  // socket.on('news', function (data) {
-  //   console.log(data);
-  //   socket.emit('my other event', { my: 'data' });
-  // });
-
+var render = function (players) {
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0);
 	}
 
+	console.log(players);
 	if (heroReady) {
-		ctx.drawImage(heroImage, hero.x, hero.y);
+		// ctx.drawImage(heroImage, hero.x, hero.y);
+		for (var item in players) {
+			console.log(item);
+			ctx.drawImage(heroImage, players[item].x, players[item].y);
+		}
 	}
 
 	if (monsterReady && monsterAlive) {
@@ -172,7 +177,7 @@ var main = function () {
 	var delta = now - then;
 
 	update(delta / 1000);
-	render();
+	// render();
 
 	then = now;
 
@@ -188,3 +193,7 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 var then = Date.now();
 reset();
 main();
+
+socket.on('all players', function(players) {
+	render(players);
+})
