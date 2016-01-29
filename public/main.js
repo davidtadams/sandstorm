@@ -21,7 +21,7 @@ var heroImage = new Image();
 heroImage.onload = function () {
 	heroReady = true;
 };
-heroImage.src = "https://github.com/lostdecade/simple_canvas_game/blob/master/images/hero.png?raw=true";
+heroImage.src = "images/monster" + Math.ceil(Math.random() * 8) + ".png";
 // Monster image
 var monsterReady = false;
 var monsterImage = new Image();
