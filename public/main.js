@@ -1,11 +1,10 @@
+var socket = io.connect();
+
 var canvas = document.createElement("canvas");
-console.log(canvas)
 var ctx = canvas.getContext("2d");
 canvas.width = 512;
 canvas.height = 480;
 document.body.appendChild(canvas);
-
-
 
 // Background image
 var bgReady = false;
@@ -136,6 +135,13 @@ if(both >= 2){
 
 // Draw everything
 var render = function () {
+	socket.emit('player location', hero);
+
+  // socket.on('news', function (data) {
+  //   console.log(data);
+  //   socket.emit('my other event', { my: 'data' });
+  // });
+
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0);
 	}
@@ -151,6 +157,7 @@ var render = function () {
   if (monster2Ready && monster2Alive) {
     ctx.drawImage(monster2Image, monster2.x, monster2.y);
   }
+
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
@@ -172,6 +179,7 @@ var main = function () {
 	// Request to do this again ASAP
 	requestAnimationFrame(main);
 };
+
 // Cross-browser support for requestAnimationFrame
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;

@@ -62,6 +62,20 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+var io = require('socket.io')(server);
+
+
+/* Socket code */
+io.on('connection', function(socket){
+  console.log('connection made');
+  console.log(socket);
+  socket.on('player location', function(location) {
+    // console.log(location);
+  })
+});
+
+
+
 /**
  * Normalize a port into a number, string, or false.
  */
